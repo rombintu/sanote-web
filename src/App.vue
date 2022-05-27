@@ -1,26 +1,42 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h2>NOTES</h2>
+    <div v-if="notes == []">
+        <ul>
+            <li v-for="note in notes" :key="note.id">{{note.Title}}</li>
+        </ul>
+    </div>
+
+    <div v-else>Notes not found.</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import IndexNotes from './components/IndexNotes.vue'
+import axios from 'axios'
+
+const host = "http://172.18.9.6:8081"
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+   // IndexNotes,
+  },
+  data() {
+    return {
+        notes: [],
+    }
+  },
+  mounted() {
+    axios.get(`${host}/note`, {params: {'author': 'admin'}})
+        .then((response) => {
+            console.log(response.data)
+            this.notes = response.data;
+        }).catch((err) => {
+            console.log("ERROR", err)
+        })
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
